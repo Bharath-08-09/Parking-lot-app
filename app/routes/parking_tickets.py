@@ -3,12 +3,12 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from typing import Optional
 from app.core.database import get_db
-from schemas.parking_tickets import (
+from app.schemas.parking_tickets import (
     ParkingTicketCreate, ParkingTicketUpdate, ParkingTicketResponse, 
     ParkingTicketList, ParkingTicketExit, ParkingTicketPayment,
     ActiveParkingResponse, PaymentStatus
 )
-from crud.parking_tickets import parking_ticket_crud
+from app.crud.parking_tickets import parking_ticket_crud
 
 router = APIRouter(prefix="/parking-tickets", tags=["parking-tickets"])
 

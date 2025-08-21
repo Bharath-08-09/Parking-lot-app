@@ -4,7 +4,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.security import verify_token
-from schemas.user_roles import UserType, RoleName
+from app.schemas.user_roles import UserType, RoleName
 
 # Keep HTTPBearer only in dependencies.py
 security = HTTPBearer()

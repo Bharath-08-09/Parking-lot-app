@@ -7,7 +7,7 @@ def test_driver_model(db):
 
 def test_vehicle_model(db):
     from models.drivers import Driver
-    from models.vehicles import Vehicle
+    from app.models.vehicles import Vehicle
     driver = Driver(name="Owner", phone="4711", email="b@t.com")
     db.add(driver); db.commit()
     vehicle = Vehicle(plate_number="PLATE123", make="BMW", model="X1", color="Red", vehicle_type="SUV", owner_id=driver.id)

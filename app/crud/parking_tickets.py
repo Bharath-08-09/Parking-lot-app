@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session, joinedload
 from typing import List, Optional
 from datetime import datetime
-from models.parking_tickets import ParkingTicket
-from schemas.parking_tickets import ParkingTicketCreate, ParkingTicketUpdate, ActiveParkingResponse
+from app.models.parking_tickets import ParkingTicket
+from app.schemas.parking_tickets import ParkingTicketCreate, ParkingTicketUpdate, ActiveParkingResponse
 
 class ParkingTicketCRUD:
     def create(self, db: Session, obj_in: ParkingTicketCreate) -> ParkingTicket:

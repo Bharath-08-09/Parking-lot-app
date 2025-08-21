@@ -1,12 +1,12 @@
 from sqlalchemy.orm import Session
-from crud.parking_slots import parking_slot_crud
-from crud.parking_lots import parking_lot_crud
-from crud.parking_tickets import parking_ticket_crud
-from crud.vehicles import vehicle_crud
-from crud.drivers import driver_crud
-from schemas.parking_tickets import ParkingTicketCreate
+from app.crud.parking_slots import parking_slot_crud
+from app.crud.parking_lots import parking_lot_crud
+from app.crud.parking_tickets import parking_ticket_crud
+from app.crud.vehicles import vehicle_crud
+from app.crud.drivers import driver_crud
+from app.schemas.parking_tickets import ParkingTicketCreate
 from datetime import datetime
-from models.parking_slots import ParkingSlot
+from app.models.parking_slots import ParkingSlot
 
 class ParkingService:
     def park_vehicle(self, db: Session, vehicle_id: int, lot_id: int, driver_id: int, attendant_id: int = None) -> dict:

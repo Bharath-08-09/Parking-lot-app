@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from crud.vehicles import vehicle_crud
-from crud.parking_tickets import parking_ticket_crud
-from crud.parking_slots import parking_slot_crud
+from app.crud.vehicles import vehicle_crud
+from app.crud.parking_tickets import parking_ticket_crud
+from app.crud.parking_slots import parking_slot_crud
 
 class SearchService:
     def search_by_attributes(self, db: Session, color=None, make=None, vehicle_type=None, lot_id=None):

@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from typing import List, Optional
-from models.vehicles import Vehicle
-from schemas.vehicles import VehicleCreate, VehicleUpdate, VehicleSearch
+from app.models.vehicles import Vehicle
+from app.schemas.vehicles import VehicleCreate, VehicleUpdate, VehicleSearch
 
 class VehicleCRUD:
     def create(self, db: Session, obj_in: VehicleCreate) -> Vehicle:

@@ -1,10 +1,10 @@
 from fastapi import FastAPI, Depends
 from app.core.config import settings
 from app.core.dependencies import get_current_user
-from auth.router import router as auth_router
+from app.auth.router import router as auth_router
 
 # Import all route modules
-from routes import (
+from app.routes import (
     drivers,
     vehicles,
     attendants,

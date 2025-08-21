@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from app.core.database import get_db
-from schemas.vehicles import VehicleCreate, VehicleUpdate, VehicleResponse, VehicleList, VehicleSearch, VehicleType
-from crud.vehicles import vehicle_crud
-from crud.drivers import driver_crud
+from app.schemas.vehicles import VehicleCreate, VehicleUpdate, VehicleResponse, VehicleList, VehicleSearch, VehicleType
+from app.crud.vehicles import vehicle_crud
+from app.crud.drivers import driver_crud
 
 router = APIRouter(prefix="/vehicles", tags=["vehicles"])
 

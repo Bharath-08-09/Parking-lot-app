@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from schemas.user_roles import UserType, RoleName  # adjust import as needed
+from app.schemas.user_roles import UserType, RoleName  # adjust import as needed
 
 class LoginRequest(BaseModel):
     user_id: int
