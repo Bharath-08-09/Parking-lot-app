@@ -4,16 +4,16 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.security import verify_token
-from app.schemas.user_roles import UserType, RoleName
+from schemas.user_roles import UserType, RoleName
 
-
+# Keep HTTPBearer only in dependencies.py
 security = HTTPBearer()
-
 
 def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db)
 ) -> dict:
+    """Get current authenticated user from JWT token."""
     token = credentials.credentials
     payload = verify_token(token)
     
@@ -34,10 +34,11 @@ def get_current_user(
         "role_name": role_name
     }
 
-
 def require_role(required_roles: list[RoleName]):
+    """Dependency to require specific roles."""
     def role_checker(current_user: dict = Depends(get_current_user)):
         user_role = current_user.get("role_name")
+        # Convert enum values to strings for comparison
         allowed_roles = [role.value for role in required_roles]
         if user_role not in allowed_roles:
             raise HTTPException(
@@ -47,10 +48,11 @@ def require_role(required_roles: list[RoleName]):
         return current_user
     return role_checker
 
-
 def require_user_type(required_types: list[UserType]):
+    """Dependency to require specific user types."""
     def type_checker(current_user: dict = Depends(get_current_user)):
         user_type = current_user.get("user_type")
+        # Convert enum values to strings for comparison
         allowed_types = [utype.value for utype in required_types]
         if user_type not in allowed_types:
             raise HTTPException(
@@ -60,7 +62,7 @@ def require_user_type(required_types: list[UserType]):
         return current_user
     return type_checker
 
-
+# Specific role dependencies for common use cases
 admin_required = require_role([RoleName.ADMIN])
 attendant_required = require_role([RoleName.ATTENDANT, RoleName.ADMIN])
 police_required = require_user_type([UserType.POLICE, UserType.SECURITY])
