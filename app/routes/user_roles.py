@@ -4,6 +4,7 @@ from typing import Optional
 from app.core.database import get_db
 from app.schemas.user_roles import UserRoleCreate, UserRoleUpdate, UserRoleResponse, UserRoleList, UserType, RoleName
 from app.crud.user_roles import user_role_crud
+from app.utils.permissions import get_admins, get_police_users, has_permission, add_permission, remove_permission
 
 
 router = APIRouter(prefix="/user-roles", tags=["user-roles"])
@@ -82,5 +83,38 @@ def delete_user_role(role_id: int, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User role not found"
         )
-    
     user_role_crud.remove(db, id=role_id)
+    
+@router.get("/admins", response_model=UserRoleList)
+def get_all_admins(db: Session = Depends(get_db)):
+    admins = get_admins(db)
+    total = len(admins)
+    return UserRoleList(user_roles=admins, total=total)
+
+@router.get("/police", response_model=UserRoleList)
+def get_all_police_users(db: Session = Depends(get_db)):
+    police_users = get_police_users(db)
+    total = len(police_users)
+    return UserRoleList(user_roles=police_users, total=total)
+
+@router.get("/{user_id}/has-perm")
+def check_permission(user_id: int, perm: str, db: Session = Depends(get_db)):
+    if has_permission(db, user_id, perm):
+        return {"user_id": user_id, "permission": perm, "has_permission": True}
+    return {"user_id": user_id, "permission": perm, "has_permission": False}
+
+@router.post("/{user_id}/add-perm")
+def add_user_permission(user_id: int, perm: str, db: Session = Depends(get_db)):
+    user_role = add_permission(db, user_id, perm)
+    if not user_role:
+        raise HTTPException(status_code=404, detail="User role not found")
+    return {"message": "Permission added successfully"}
+
+@router.post("/{user_id}/remove-perm")
+def remove_user_permission(user_id: int, perm: str, db: Session = Depends(get_db)):
+    user_role = remove_permission(db, user_id, perm)
+    if not user_role:
+        raise HTTPException(status_code=404, detail="User role not found")
+    return {"message": "Permission removed successfully"}
+    
+   
