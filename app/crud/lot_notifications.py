@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models.lot_notifications import LotNotification
-from schemas.lot_notifications import LotNotificationCreate, LotNotificationUpdate
+from app.models.lot_notifications import LotNotification
+from app.schemas.lot_notifications import LotNotificationCreate, LotNotificationUpdate
 
 def create_lot_notification(db: Session, payload: LotNotificationCreate) -> LotNotification:
     obj_data = payload.model_dump()

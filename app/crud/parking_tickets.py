@@ -2,8 +2,8 @@ from sqlalchemy.orm import Session
 from typing import Optional
 from datetime import datetime
 from fastapi import HTTPException
-from models.parking_tickets import ParkingTicket
-from schemas.parking_tickets import ParkingTicketCreate, ParkingTicketUpdate
+from app.models.parking_tickets import ParkingTicket
+from app.schemas.parking_tickets import ParkingTicketCreate, ParkingTicketUpdate
 
 def create_parking_ticket(db: Session, payload: ParkingTicketCreate) -> ParkingTicket:
     import uuid

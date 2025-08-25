@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models.user_roles import UserRole
-from schemas.user_roles import UserRoleCreate, UserRoleUpdate
+from app.models.user_roles import UserRole
+from app.schemas.user_roles import UserRoleCreate, UserRoleUpdate
 import json
 
 def create_user_role(db: Session, payload: UserRoleCreate) -> UserRole:

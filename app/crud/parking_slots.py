@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from fastapi import HTTPException
-from models.parking_slots import ParkingSlot
-from schemas.parking_slots import ParkingSlotCreate, ParkingSlotUpdate
+from app.models.parking_slots import ParkingSlot
+from app.schemas.parking_slots import ParkingSlotCreate, ParkingSlotUpdate
 
 def create_parking_slot(db: Session, payload: ParkingSlotCreate) -> ParkingSlot:
     obj_data = payload.model_dump()

@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from typing import List
 from fastapi import HTTPException
-from models.drivers import Driver
-from schemas.drivers import DriverCreate
+from app.models.drivers import Driver
+from app.schemas.drivers import DriverCreate
 
 def create_driver(db: Session, payload: DriverCreate) -> Driver:
     obj_data = payload.model_dump()

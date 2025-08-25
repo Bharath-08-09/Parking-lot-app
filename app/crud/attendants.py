@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models.attendants import Attendant
-from schemas.attendants import AttendantCreate
+from app.models.attendants import Attendant
+from app.schemas.attendants import AttendantCreate
 
 def create_attendant(db: Session, payload: AttendantCreate) -> Attendant:
     existing = db.query(Attendant).filter(Attendant.employee_id == payload.employee_id.upper()).first()
