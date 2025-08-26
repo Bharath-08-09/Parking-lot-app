@@ -3,21 +3,28 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.schemas.user_roles import UserRoleCreate, UserRoleResponse
 from app.crud.user_roles import create_user_role, get_user_role, delete_user_role
+from app.utils.standardised_response import standard_response
+
 
 router = APIRouter(prefix="/user-roles", tags=["user-roles"])
 
-@router.post("/", response_model=UserRoleResponse, status_code=status.HTTP_201_CREATED)
+
+@router.post("/")
 def create_new_user_role(user_role: UserRoleCreate, db: Session = Depends(get_db)):
-    """Create a new user role."""
     # Remove the duplicate check since your CRUD doesn't have get_by_user_id
-    return create_user_role(db, user_role)
+    user_role_data = create_user_role(db, user_role)
+    data = UserRoleResponse.model_validate(user_role_data).model_dump()
+    return standard_response(201, "User role created successfully", data)
 
-@router.get("/{role_id}", response_model=UserRoleResponse)
+
+@router.get("/{role_id}")
 def get_user_role_by_id(role_id: int, db: Session = Depends(get_db)):
-    """Get user role by ID."""
-    return get_user_role(db, role_id)
+    user_role_data = get_user_role(db, role_id)
+    data = UserRoleResponse.model_validate(user_role_data).model_dump()
+    return standard_response(200, "User role fetched successfully", data)
 
-@router.delete("/{role_id}", status_code=status.HTTP_204_NO_CONTENT)
+
+@router.delete("/{role_id}")
 def delete_user_role_by_id(role_id: int, db: Session = Depends(get_db)):
-    """Delete user role by ID."""
     delete_user_role(db, role_id)
+    return standard_response(200, "User role deleted successfully", None)

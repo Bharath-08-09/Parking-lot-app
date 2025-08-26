@@ -14,28 +14,28 @@ from app.utils.vehicle_search import (
     get_vehicles_by_type,
     get_large_vehicles
 )
+from app.utils.standardised_response import standard_response
+
 
 router = APIRouter(prefix="/vehicles", tags=["vehicles"])
 
-@router.post("/", response_model=VehicleResponse, status_code=status.HTTP_201_CREATED)
+
+@router.post("/")
 def create_new_vehicle(vehicle: VehicleCreate, db: Session = Depends(get_db)):
     if get_vehicle_by_plate(db, vehicle.plate_number):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Vehicle with this plate number already exists"
-        )
+        return standard_response(400, "Vehicle with this plate number already exists", None)
     
     try:
         get_driver(db, vehicle.owner_id)
     except HTTPException:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Owner (driver) not found"
-        )
+        return standard_response(400, "Owner (driver) not found", None)
     
-    return create_vehicle(db, vehicle)
+    vehicle_data = create_vehicle(db, vehicle)
+    data = VehicleResponse.model_validate(vehicle_data).model_dump()
+    return standard_response(201, "Vehicle created successfully", data)
 
-@router.get("/search", response_model=VehicleList)
+
+@router.get("/search")
 def search_vehicles_endpoint(
     plate_number: Optional[str] = Query(None),
     make: Optional[str] = Query(None),
@@ -50,52 +50,76 @@ def search_vehicles_endpoint(
         vehicle_type=vehicle_type
     )
     vehicles = search_vehicles(db, search_params)
-    
-    return VehicleList(vehicles=vehicles, total=len(vehicles))
+    vehicle_list = VehicleList(vehicles=vehicles, total=len(vehicles))
+    data = vehicle_list.model_dump()
+    return standard_response(200, "Vehicles searched successfully", data)
 
-@router.get("/{vehicle_id}", response_model=VehicleResponse)
+
+@router.get("/{vehicle_id}")
 def get_vehicle_by_id(vehicle_id: int, db: Session = Depends(get_db)):
-    return get_vehicle(db, vehicle_id)
+    vehicle_data = get_vehicle(db, vehicle_id)
+    data = VehicleResponse.model_validate(vehicle_data).model_dump()
+    return standard_response(200, "Vehicle fetched successfully", data)
 
-@router.get("/plate/{plate_number}", response_model=VehicleResponse)
+
+@router.get("/plate/{plate_number}")
 def get_vehicle_by_plate_number(plate_number: str, db: Session = Depends(get_db)):
     vehicle = get_vehicle_by_plate(db, plate_number)
     if not vehicle:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Vehicle not found"
-        )
-    return vehicle
+        return standard_response(404, "Vehicle not found", None)
+    
+    data = VehicleResponse.model_validate(vehicle).model_dump()
+    return standard_response(200, "Vehicle fetched successfully", data)
 
-@router.get("/owner/{owner_id}", response_model=VehicleList)
+
+@router.get("/owner/{owner_id}")
 def get_vehicles_by_owner_id(owner_id: int, db: Session = Depends(get_db)):
     vehicles = get_vehicles_by_owner(db, owner_id)
-    return VehicleList(vehicles=vehicles, total=len(vehicles))
+    vehicle_list = VehicleList(vehicles=vehicles, total=len(vehicles))
+    data = vehicle_list.model_dump()
+    return standard_response(200, "Vehicles by owner fetched successfully", data)
 
-@router.get("/color/{color}", response_model=VehicleList)
+
+@router.get("/color/{color}")
 def get_vehicles_by_color_filter(color: str, db: Session = Depends(get_db)):
     vehicles = get_vehicles_by_color(db, color)
-    return VehicleList(vehicles=vehicles, total=len(vehicles))
+    vehicle_list = VehicleList(vehicles=vehicles, total=len(vehicles))
+    data = vehicle_list.model_dump()
+    return standard_response(200, "Vehicles by color fetched successfully", data)
 
-@router.get("/make/{make}", response_model=VehicleList)
+
+@router.get("/make/{make}")
 def get_vehicles_by_make_filter(make: str, db: Session = Depends(get_db)):
     vehicles = get_vehicles_by_make(db, make)
-    return VehicleList(vehicles=vehicles, total=len(vehicles))
+    vehicle_list = VehicleList(vehicles=vehicles, total=len(vehicles))
+    data = vehicle_list.model_dump()
+    return standard_response(200, "Vehicles by make fetched successfully", data)
 
-@router.get("/type/{vehicle_type}", response_model=VehicleList)
+
+@router.get("/type/{vehicle_type}")
 def get_vehicles_by_type_filter(vehicle_type: str, db: Session = Depends(get_db)):
     vehicles = get_vehicles_by_type(db, vehicle_type)
-    return VehicleList(vehicles=vehicles, total=len(vehicles))
+    vehicle_list = VehicleList(vehicles=vehicles, total=len(vehicles))
+    data = vehicle_list.model_dump()
+    return standard_response(200, "Vehicles by type fetched successfully", data)
 
-@router.get("/large-vehicles/", response_model=VehicleList)
+
+@router.get("/large-vehicles/")
 def get_large_vehicles_endpoint(db: Session = Depends(get_db)):
     vehicles = get_large_vehicles(db)
-    return VehicleList(vehicles=vehicles, total=len(vehicles))
+    vehicle_list = VehicleList(vehicles=vehicles, total=len(vehicles))
+    data = vehicle_list.model_dump()
+    return standard_response(200, "Large vehicles fetched successfully", data)
 
-@router.put("/{vehicle_id}", response_model=VehicleResponse)
+
+@router.put("/{vehicle_id}")
 def update_vehicle_by_id(vehicle_id: int, vehicle_update: VehicleUpdate, db: Session = Depends(get_db)):
-    return update_vehicle(db, vehicle_id, vehicle_update)
+    vehicle_data = update_vehicle(db, vehicle_id, vehicle_update)
+    data = VehicleResponse.model_validate(vehicle_data).model_dump()
+    return standard_response(200, "Vehicle updated successfully", data)
 
-@router.delete("/{vehicle_id}", status_code=status.HTTP_204_NO_CONTENT)
+
+@router.delete("/{vehicle_id}")
 def delete_vehicle_by_id(vehicle_id: int, db: Session = Depends(get_db)):
     delete_vehicle(db, vehicle_id)
+    return standard_response(200, "Vehicle deleted successfully", None)

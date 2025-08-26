@@ -9,9 +9,6 @@ router = APIRouter(prefix="/auth", tags=["authentication"])
 
 @router.post("/login", response_model=LoginResponse)
 def login(login_data: LoginRequest, db: Session = Depends(get_db)):
-    # Here you would verify credentials and user existence
-
-    # Example role mapping (move this logic to a service if desired)
     role_mapping = {
         UserType.DRIVER: RoleName.USER,
         UserType.ATTENDANT: RoleName.ATTENDANT,
