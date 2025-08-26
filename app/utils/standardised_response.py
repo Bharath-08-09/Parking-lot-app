@@ -1,5 +1,6 @@
 from fastapi.responses import JSONResponse
 from typing import Any
+from fastapi.encoders import jsonable_encoder
 
 def standard_response(status_code: int, message: str, data: Any = None):
     return JSONResponse(
@@ -7,6 +8,6 @@ def standard_response(status_code: int, message: str, data: Any = None):
         content={
             "status_code": status_code,
             "message": message,
-            "data": data
+            "data": jsonable_encoder(data)
         }
     )
