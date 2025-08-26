@@ -10,7 +10,7 @@ from app.utils.standardised_response import standard_response
 router = APIRouter(prefix="/drivers", tags=["drivers"])
 
 
-@router.post("/")
+@router.post("/{driver_id}")
 def create_new_driver(driver: DriverCreate, db: Session = Depends(get_db)):
     """Create a new driver."""
     driver_data = create_driver(db, driver)

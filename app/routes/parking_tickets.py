@@ -19,7 +19,7 @@ from app.utils.standardised_response import standard_response
 router = APIRouter(prefix="/parking-tickets", tags=["parking-tickets"])
 
 
-@router.post("/")
+@router.post("/{ticket_id}")
 def create_new_parking_ticket(ticket: ParkingTicketCreate, db: Session = Depends(get_db)):
     ticket_data = create_parking_ticket(db, ticket)
     data = ParkingTicketResponse.model_validate(ticket_data).model_dump()

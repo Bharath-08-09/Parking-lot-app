@@ -9,9 +9,8 @@ from app.utils.standardised_response import standard_response
 router = APIRouter(prefix="/attendants", tags=["attendants"])
 
 
-@router.post("/")
+@router.post("/{attendant_id}")
 def create_new_attendant(attendant: AttendantCreate, db: Session = Depends(get_db)):
-    """Create a new attendant."""
     attendant_data = create_attendant(db, attendant)
     data = AttendantResponse.model_validate(attendant_data).model_dump()
     return standard_response(201, "Attendant created successfully", data)
@@ -19,7 +18,6 @@ def create_new_attendant(attendant: AttendantCreate, db: Session = Depends(get_d
 
 @router.get("/{attendant_id}")
 def get_attendant_by_id(attendant_id: int, db: Session = Depends(get_db)):
-    """Get attendant by ID."""
     attendant_data = get_attendant(db, attendant_id)
     data = AttendantResponse.model_validate(attendant_data).model_dump()
     return standard_response(200, "Attendant fetched successfully", data)
@@ -27,6 +25,5 @@ def get_attendant_by_id(attendant_id: int, db: Session = Depends(get_db)):
 
 @router.delete("/{attendant_id}")
 def delete_attendant_by_id(attendant_id: int, db: Session = Depends(get_db)):
-    """Delete an attendant."""
     delete_attendant(db, attendant_id)
     return standard_response(200, "Attendant deleted successfully", None)

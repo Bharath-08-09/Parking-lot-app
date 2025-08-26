@@ -17,7 +17,7 @@ from app.utils.standardised_response import standard_response
 router = APIRouter(prefix="/parking-slots", tags=["parking-slots"])
 
 
-@router.post("/")
+@router.post("/{slot_id}")
 def create_new_parking_slot(slot: ParkingSlotCreate, db: Session = Depends(get_db)):
     slot_data = create_parking_slot(db, slot)
     data = ParkingSlotResponse.model_validate(slot_data).model_dump()

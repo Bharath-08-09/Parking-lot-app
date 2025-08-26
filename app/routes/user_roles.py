@@ -9,7 +9,7 @@ from app.utils.standardised_response import standard_response
 router = APIRouter(prefix="/user-roles", tags=["user-roles"])
 
 
-@router.post("/")
+@router.post("/{role_id}")
 def create_new_user_role(user_role: UserRoleCreate, db: Session = Depends(get_db)):
     # Remove the duplicate check since your CRUD doesn't have get_by_user_id
     user_role_data = create_user_role(db, user_role)

@@ -20,7 +20,7 @@ from app.utils.standardised_response import standard_response
 router = APIRouter(prefix="/vehicles", tags=["vehicles"])
 
 
-@router.post("/")
+@router.post("/{vehicle_id}")
 def create_new_vehicle(vehicle: VehicleCreate, db: Session = Depends(get_db)):
     if get_vehicle_by_plate(db, vehicle.plate_number):
         return standard_response(400, "Vehicle with this plate number already exists", None)

@@ -16,7 +16,7 @@ from app.utils.standardised_response import standard_response
 router = APIRouter(prefix="/notifications", tags=["notifications"])
 
 
-@router.post("/")
+@router.post("/{notification_id}")
 def create_notification(notification: LotNotificationCreate, db: Session = Depends(get_db)):
     notification_data = create_lot_notification(db, notification)
     data = LotNotificationResponse.model_validate(notification_data).model_dump()
